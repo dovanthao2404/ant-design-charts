@@ -1,0 +1,10 @@
+.App {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.App .item {
+  width: 25%;
+  p {
+    color: red;
+  }
+}
