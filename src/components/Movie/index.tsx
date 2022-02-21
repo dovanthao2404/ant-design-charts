@@ -2,24 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Pie } from '@ant-design/plots';
 import api from '../../services/baseApiServices';
 
-export default function Movie() {
-    const [listMovie, setListMovie] = useState<any>();
-    useEffect(() => {
-        (async () => {
-            const res = await api.get("/api/QuanLyRap/LayThongTinLichChieuHeThongRap");
-            const dataTemp = res.data.content.map((item: any, index: any) => {
-                const value = item.lstCumRap.reduce((total: number, item: any) => {
-                    return total + item.danhSachPhim.length;
-                }, 0);
-                return { type: item.maHeThongRap, value };
-            });
-            setListMovie(dataTemp);
-        })();
-    }, []);
+export default function Movie(props: any) {
+    if (!props.data) return <></>;
+    const dataTemp = props?.data?.content.map((item: any, index: any) => {
+        const value = item.lstCumRap.reduce((total: number, item: any) => {
+            return total + item.danhSachPhim.length;
+        }, 0);
+        return { type: item.maHeThongRap, value };
+    });
 
     const config = {
         appendPadding: 10,
-        data: listMovie,
+        data: dataTemp,
         angleField: 'value',
         colorField: 'type',
         radius: 0.9,
@@ -40,11 +34,11 @@ export default function Movie() {
             },
         ],
     } as any;
-    if (!listMovie) { return <>loading</>; }
+    if (!dataTemp) { return <>loading</>; }
 
     return (
         <div className='item'>
-            <p >Total movie {listMovie.reduce((total: number, item: { type: string, value: number; }) => (total += item.value), 0)}</p>
+            <p >Total movie {dataTemp.reduce((total: number, item: { type: string, value: number; }) => (total += item.value), 0)}</p>
             <Pie {...config} />
         </div>
     );
